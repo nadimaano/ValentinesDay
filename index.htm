@@ -4,191 +4,89 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>💌 For Skylar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
-    :root { --pad: 18px; --pink: #ff6b9d; --light-pink: #ffb6d9; --dark-pink: #c2185b; }
+    :root{
+      /* Spacing */
+      --pad: 20px; --gap: 14px;
+      /* Palette */
+      --bg-start: #fffafc; /* almost white blush */
+      --bg-end: #fff0f4;   /* pale pink */
+      --accent: #d81f6a;   /* rose/fuchsia */
+      --accent-2: #ff6b9d; /* lighter pink */
+      --champagne: #f7e9e1; /* pale warm */
+      --text: #111216;     /* near-black */
+      --muted: #7a6f73;    /* muted gray */
+      --hair: rgba(226,182,193,0.35); /* light hairline */
+      --card-radius: 20px;
+    }
+
+    html,body{ height:100%; }
     body{
       margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-      background: linear-gradient(135deg, #ffe0ec 0%, #ffb6d9 30%, #ffc0cb 70%, #ffe0ec 100%);
-      color:#333;
+      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background: linear-gradient(180deg, var(--bg-start), var(--bg-end));
+      color:var(--text);
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+      padding:24px;
     }
+
     .card{
-      width:min(560px, 94vw);
-      background: linear-gradient(to bottom, rgba(255,255,255,0.98), rgba(255,245,248,0.98));
-      border: 1px solid rgba(255,107,157,0.08);
-      border-radius: 20px;
-      box-shadow: 0 8px 28px rgba(0,0,0,0.06);
+      width:min(640px, 96vw);
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,250,250,0.99));
+      border: 1px solid var(--hair);
+      border-radius: var(--card-radius);
+      box-shadow: 0 10px 30px rgba(16,14,20,0.06);
       overflow:hidden;
       position: relative;
-      padding-bottom: 8px;
+      padding: 18px;
+      max-width: 640px;
     }
-    .snoopy-deco{
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      object-fit: contain;
-      background: transparent;
-      display:block;
-    }
-    /* Snoopy wrapper: keep it small, anchored and non-intrusive. */
-    .snoopy-wrap{
-      position: absolute;
-      right: -14px;
-      bottom: -6px;
-      width: 110px;
-      height: 110px;
-      border-radius: 14px;
-      background: transparent; /* ensure no background so PNG transparency shows */
-      display:flex; align-items:center; justify-content:center;
-      z-index: 0;
-      pointer-events: none;
-    }
-    /* Developer note: Use a true transparent PNG for `Snoopy Heart.png`. If you see a checkerboard pattern in the image, that means the checkerboard is baked into the pixels (image is not actually transparent). Replace with a PNG that has an actual alpha channel. */
-    .top{
-      padding: 18px 18px 12px;
-      display:flex; gap:12px; align-items:center;
-      background: transparent;
-      position: relative;
-      z-index: 1;
-    }
-    .badge{
-      width:46px; height:46px; border-radius: 12px;
-      display:grid; place-items:center;
-      background: linear-gradient(135deg, rgba(255,107,157,0.12), rgba(255,182,193,0.08));
-      font-size: 24px;
-      animation: float 3s ease-in-out infinite;
-    }
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-8px); }
-    }
-    .title{ font-weight: 700; font-size: 18px; color: var(--dark-pink); }
-    .subtitle{ font-size: 14px; opacity: 0.8; margin-top: 3px; color: var(--pink); }
-    .content{ padding: 14px var(--pad) 10px; position: relative; z-index: 1; display:flex; flex-direction:column; gap:12px; }
-    .bubble{
-      background: rgba(255,255,255,0.9);
-      border-radius: 14px;
-      padding: 16px;
-      font-size: 17px;
-      line-height: 1.45;
-      position: relative;
-      color: #333;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.04);
-    }
-    .bubble:after{
-      content:"";
-      position:absolute;
-      left: 24px;
-      bottom:-12px;
-      width:20px; height:20px;
-      background:linear-gradient(135deg, rgba(255,255,255,0.98), rgba(255,250,250,0.95));
-      border-left:2px solid rgba(255,107,157,0.15);
-      border-bottom:2px solid rgba(255,107,157,0.15);
-      transform: rotate(45deg);
-    }
-    .hint{ padding: 14px var(--pad) 0; font-size: 14px; opacity:0.7; color: var(--pink); font-style: italic; }
-    .actions{
-      padding: 16px var(--pad) 20px;
-      display:flex; gap:10px; flex-wrap:wrap;
-      position: relative;
-      z-index: 1;
-    }
-    button{
-      border:0; cursor:pointer; padding: 13px 16px;
-      border-radius: 14px; font-weight: 650;
-      font-size: 15px;
-      transition: transform .1s ease, filter .15s ease, box-shadow .2s ease;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    button:hover{ 
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-    }
-    button:active{ transform: scale(0.96); }
-    .primary{ 
-      background: linear-gradient(135deg, var(--pink), var(--light-pink));
-      color:white; 
-      font-weight: 700;
-    }
-    .secondary{ 
-      background: linear-gradient(135deg, rgba(255,107,157,0.08), rgba(255,182,193,0.08));
-      color: var(--pink);
-      font-weight: 600;
-    }
-    .ghost{ background: transparent; border:2px dashed var(--pink); color: var(--pink); }
-    .row{ display:flex; gap:10px; width:100%; }
-    .row button{ flex: 1; }
-    .footer{
-      padding: 12px var(--pad) 16px;
-      font-size: 13px; opacity: 0.65;
-      display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
-      border-top: 1px solid rgba(255,107,157,0.1);
-      position: relative;
-      z-index: 1;
-      color: var(--pink);
-    }
-    .yesScreen{
-      padding: 32px var(--pad) 28px;
-      text-align:center;
-      position: relative;
-      z-index: 1;
-    }
-    .big{
-      font-size: 32px; font-weight: 800; margin: 14px 0 10px;
-      background: linear-gradient(135deg, var(--dark-pink), var(--pink));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .small{
-      font-size: 16px; opacity:0.8; margin:0 0 18px; color: #333;
-    }
-    .hearts{ font-size: 38px; letter-spacing: 4px; animation: pulse 1.5s ease-in-out infinite; }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-    }
-    .snoopy-cheer {
-      width: 180px;
-      height: 180px;
-      margin: 16px auto;
-      animation: bounce 1s ease-in-out infinite;
-      pointer-events: none;
-      object-fit: contain;
-    }
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-20px); }
-    }
-    /* audio-player removed: using hidden audio element and autoplay-on-touch */
-    /* Photo area (fixed aspect ratio) */
-    .slideshow{
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16/9;
-      max-height: 52vh;
-      margin: 0 auto 6px;
-      border-radius: 12px;
-      overflow: hidden;
-      background: #f7f5f6;
-    }
-    .slideshow img.slide{
-      position: absolute; inset: 0; width: 100%; height: 100%;
-      object-fit: contain; display:block; background: transparent;
-      opacity: 0; transition: opacity 0.6s ease;
-    }
-    .slideshow img.slide.active{ opacity: 1; }
-    .slideshow-caption{ text-align:center; padding:8px 12px; font-size:15px; color: #333; opacity:0.95 }
-    .dots{ display:flex; gap:8px; justify-content:center; padding:6px 0 10px; }
-    .dots button{ width:8px; height:8px; border-radius:50%; border:0; background: rgba(0,0,0,0.12); }
-    .dots button.active{ background: var(--pink); }
+
+    /* Snoopy: sticker in corner. Keep transparent and non-intrusive. */
+    .snoopy-wrap{ position:absolute; right:14px; bottom:14px; width:110px; height:110px; pointer-events:none; z-index:0; }
+    .snoopy-deco{ width:100%; height:100%; object-fit:contain; display:block; background:transparent; }
+    /* Developer note: use a true transparent PNG for `Snoopy Heart.png`. A checkerboard inside the image pixels means the background is baked in and must be replaced. */
+
+    .top{ display:flex; gap:12px; align-items:center; padding:6px 6px 12px; z-index:1; }
+    .badge{ width:44px; height:44px; display:grid; place-items:center; border-radius:10px; background:var(--champagne); font-size:20px; }
+    .title{ font-family: 'Playfair Display', Georgia, serif; font-size:26px; line-height:1; color:var(--text); margin:0; font-weight:700; }
+    .subtitle{ font-size:13px; margin-top:4px; color:var(--muted); }
+
+    .content{ padding: 12px 6px 6px; display:flex; flex-direction:column; gap:18px; z-index:1; }
+
+    /* Photo area */
+    .slideshow{ width:100%; aspect-ratio: 4/3; border-radius:12px; overflow:hidden; border:1px solid var(--hair); background:var(--champagne); display:block; }
+    .slideshow img.slide{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .6s ease; }
+    .slideshow img.slide.active{ opacity:1; }
+    .slideshow-caption{ text-align:center; margin-top:8px; color:var(--muted); font-size:14px; }
+    .dots{ display:flex; gap:8px; justify-content:center; padding-top:8px; }
+    .dots button{ width:9px; height:9px; border-radius:50%; border:0; background: rgba(0,0,0,0.12); }
+    .dots button.active{ background: var(--accent); }
+
+    /* Message bubble */
+    .bubble{ background:#fff; border-radius:12px; padding:18px; font-size:17px; line-height:1.6; color:var(--text); box-shadow: 0 8px 20px rgba(16,14,20,0.04); border:1px solid rgba(0,0,0,0.03); font-family: Georgia, 'Times New Roman', serif; }
+    .hint{ font-style:italic; color:var(--muted); font-size:13px; padding-left:2px; }
+
+    /* Buttons */
+    .row{ display:flex; gap:12px; }
+    .row button{ flex:1; padding:12px 14px; border-radius:12px; font-weight:600; font-size:15px; }
+    .primary{ background: linear-gradient(90deg, var(--accent), var(--accent-2)); color:#fff; box-shadow: 0 6px 18px rgba(216,31,106,0.12); border:0; }
+    .primary:active{ transform:translateY(1px); }
+    .secondary{ background: #fff; color:var(--accent); border:1px solid var(--hair); }
+    .ghost{ display:none; }
+
+    .music-control{ text-align:center; margin-top:8px; }
+    .music-link{ color:var(--accent); font-size:14px; background:transparent; border:1px solid rgba(216,31,106,0.06); padding:6px 10px; border-radius:999px; }
+
+    .footer{ display:flex; justify-content:space-between; align-items:center; gap:8px; padding-top:8px; color:var(--muted); font-size:13px; }
+
     @media (max-width:420px){
-      .slideshow{ aspect-ratio: 4/3; }
-      .snoopy-wrap{ width: 100px; height: 100px; right: -12px; bottom: -6px; }
+      .card{ padding:14px; }
+      .title{ font-size:20px; }
+      .slideshow{ aspect-ratio: 3/2; }
+      .snoopy-wrap{ width:90px; height:90px; right:10px; bottom:10px; }
     }
-    /* small music link */
-    .music-control{ text-align:center; margin-top:6px; }
-    .music-link{ background:transparent; border:0; color: var(--pink); font-size:14px; padding:6px 8px; cursor:pointer; }
   </style>
 </head>
 <body>
@@ -323,6 +221,8 @@
         </div>
       `;
     }
+    // sync slideshow to current narrative step
+    try { showSlide(idx); } catch(e) { /* ignore if slideshow not ready */ }
   }
 
   function next() {
@@ -342,7 +242,6 @@
         <img src="Snoopy Heart.png" alt="Snoopy celebration" class="snoopy-cheer">
         <div class="big">YOU'RE MY VALENTINE!</div>
         <p class="small">You just made me the happiest 🥹</p>
-        <p class="small">Text me: <b>"YES 💘"</b> and I'll treasure it forever.</p>
         <p class="small">I love you, ${herName}. 💕</p>
         <button class="primary" onclick="confetti()">Celebrate with me ✨</button>
       </div>
