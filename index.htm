@@ -183,11 +183,24 @@
   </div>
 
   <!-- Optional tiny background music placeholder -->
-  <audio id="audio" autoplay loop>
+  <audio id="audio" loop>
     <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=" type="audio/wav">
   </audio>
 
 <script>
+  // Play audio on first user interaction (mobile autoplay policy workaround)
+  let audioStarted = false;
+  function startAudio() {
+    if (!audioStarted) {
+      const audio = document.getElementById("audio");
+      audio.play().catch(() => {});
+      audioStarted = true;
+      document.removeEventListener("click", startAudio);
+      document.removeEventListener("touchstart", startAudio);
+    }
+  }
+  document.addEventListener("click", startAudio);
+  document.addEventListener("touchstart", startAudio);
   // Names + header
   const herName = "Skylar";
   const yourName = "— Noah";
@@ -303,6 +316,7 @@
 
   function toggleMusic() {
     const a = document.getElementById("audio");
+    audioStarted = true;
     if (a.paused) a.play().catch(()=>{});
     else a.pause();
   }
