@@ -150,6 +150,19 @@
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-20px); }
     }
+    .audio-player {
+      padding: 16px var(--pad);
+      background: linear-gradient(135deg, rgba(255,107,157,0.1), rgba(255,182,193,0.08));
+      border-top: 2px solid rgba(255,107,157,0.1);
+      border-bottom: 2px solid rgba(255,107,157,0.1);
+      position: relative;
+      z-index: 1;
+    }
+    .audio-player audio {
+      width: 100%;
+      height: 32px;
+      accent-color: var(--pink);
+    }
   </style>
 </head>
 <body>
@@ -163,7 +176,12 @@
       </div>
     </div>
 
-    <div class="content" id="content">
+    <div class="audio-player">
+      <audio id="audio" controls loop>
+        <source src="George%20Strait%20Write%20This%20Down%20with%20Lyrics.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+    </div>
       <div class="bubble" id="bubble">Loading...</div>
       <div class="hint" id="hint"></div>
     </div>
@@ -182,10 +200,7 @@
     </div>
   </div>
 
-  <!-- Background music -->
-  <audio id="audio" loop>
-    <source src="George Strait Write This Down with Lyrics.mp3" type="audio/mpeg">
-  </audio>
+  <!-- Background music player is now visible in the card -->
 
 <script>
   // Play audio on first user interaction (mobile autoplay policy workaround)
@@ -193,6 +208,7 @@
   function startAudio() {
     if (!audioStarted) {
       const audio = document.getElementById("audio");
+      audio.muted = false;
       audio.play().catch(() => {});
       audioStarted = true;
       document.removeEventListener("click", startAudio);
