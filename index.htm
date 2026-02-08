@@ -22,15 +22,25 @@
       position: relative;
     }
     .snoopy-deco{
-      position: absolute;
-      right: -20px;
-      bottom: -10px;
-      width: 130px;
-      height: 130px;
-      opacity: 0.85;
-      z-index: 0;
+      width: 90%;
+      height: 90%;
       pointer-events: none;
       object-fit: contain;
+      background: transparent;
+      display:block;
+    }
+    .snoopy-wrap{
+      position: absolute;
+      right: -18px;
+      bottom: -8px;
+      width: 130px;
+      height: 130px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,240,248,0.9));
+      display:flex; align-items:center; justify-content:center;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+      z-index: 0;
+      pointer-events: none;
     }
     .top{
       padding: var(--pad);
@@ -150,19 +160,7 @@
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-20px); }
     }
-    .audio-player {
-      padding: 16px var(--pad);
-      background: linear-gradient(135deg, rgba(255,107,157,0.1), rgba(255,182,193,0.08));
-      border-top: 2px solid rgba(255,107,157,0.1);
-      border-bottom: 2px solid rgba(255,107,157,0.1);
-      position: relative;
-      z-index: 1;
-    }
-    .audio-player audio {
-      width: 100%;
-      height: 32px;
-      accent-color: var(--pink);
-    }
+    /* audio-player removed: using hidden audio element and autoplay-on-touch */
     /* Slideshow styles */
     .slideshow{
       position: relative;
@@ -177,11 +175,13 @@
     }
     .slideshow img.slide{
       position: absolute; inset: 0; width: 100%; height: 100%;
-      object-fit: cover; display:block;
+      object-fit: contain; display:block; background: #fff;
       opacity: 0; transition: opacity 0.8s ease;
+      align-items:center; justify-content:center;
     }
     .slideshow img.slide.active{ opacity: 1; }
-    .dots{ display:flex; gap:8px; justify-content:center; padding:10px 0; }
+    .slideshow-caption{ text-align:center; padding:8px 12px; font-size:15px; color: #333; opacity:0.95 }
+    .dots{ display:flex; gap:8px; justify-content:center; padding:6px 0 10px; }
     .dots button{ width:8px; height:8px; border-radius:50%; border:0; background: rgba(0,0,0,0.12); }
     .dots button.active{ background: var(--pink); }
     @media (max-width:420px){
@@ -192,7 +192,9 @@
 </head>
 <body>
   <div class="card" role="application" aria-label="Valentine App">
-    <img src="Snoopy Heart.png" alt="Snoopy decoration" class="snoopy-deco">
+    <div class="snoopy-wrap" aria-hidden="true">
+      <img src="Snoopy Heart.png" alt="" class="snoopy-deco">
+    </div>
     <div class="top">
       <div class="badge">💗</div>
       <div>
@@ -201,12 +203,10 @@
       </div>
     </div>
 
-    <div class="audio-player">
-      <audio id="audio" controls loop>
-        <source src="George%20Strait%20Write%20This%20Down%20with%20Lyrics.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-      </audio>
-    </div>
+    <!-- Background music (hidden) -->
+    <audio id="audio" loop>
+      <source src="George%20Strait%20Write%20This%20Down%20with%20Lyrics.mp3" type="audio/mpeg">
+    </audio>
     <div class="content" id="content">
       <div class="slideshow" id="slideshow">
         <img src="IMG_3542.JPG" class="slide active" alt="">
@@ -215,6 +215,7 @@
         <img src="IMG_3505.jpg" class="slide" alt="">
         <img src="IMG_3480.JPG" class="slide" alt="">
         <div class="dots" id="slideshow-dots"></div>
+        <div class="slideshow-caption">These last 7 months have been amazing.</div>
       </div>
 
       <div class="bubble" id="bubble">Loading...</div>
@@ -263,6 +264,7 @@
     { text: "I made this for you because you're so special to me.", hint: "Keep reading 💕" },
     { text: "I've been thinking about how much you mean to me.", hint: "Next up..." },
     { text: "You're absolutely stunning, inside and out.", hint: "You look amazing ✨" },
+    { text: "I'm so proud of you for becoming an RBT.", hint: "You worked so hard ❤️" },
     { text: "Being with you is my favorite part of every day.", hint: "You know this ❤️" },
     { text: "There's something I need to ask you.", hint: "The important part" },
     { text: `${herName}… will you be my Valentine? 💝`, hint: "I really hope so 💕", isQuestion: true },
@@ -358,11 +360,21 @@
   }
 
   function dodge(btn){
-    btn.style.position = "fixed";
-    const x = Math.floor(Math.random() * window.innerWidth - btn.offsetWidth);
-    const y = Math.floor(Math.random() * window.innerHeight - btn.offsetHeight);
-    btn.style.left = Math.max(10, x) + "px";
-    btn.style.top = Math.max(10, y) + "px";
+    // playful dodge: briefly change text, animate, then move
+    try {
+      const original = btn.textContent;
+      btn.textContent = "Oops!";
+      btn.style.transition = "transform 220ms ease, left 300ms ease, top 300ms ease";
+      btn.style.position = "fixed";
+      const x = Math.floor(Math.random() * (window.innerWidth - btn.offsetWidth - 40)) + 10;
+      const y = Math.floor(Math.random() * (window.innerHeight - btn.offsetHeight - 80)) + 60;
+      // animate with small transform first
+      btn.style.transform = "scale(1.05) rotate(-6deg)";
+      setTimeout(()=>{ btn.style.left = x + "px"; btn.style.top = y + "px"; btn.style.transform = "scale(1) rotate(0deg)"; }, 80);
+      setTimeout(()=>{ btn.textContent = original; }, 900);
+    } catch(e) {
+      console.error(e);
+    }
   }
 
   function toggleMusic() {
@@ -399,9 +411,8 @@
       setTimeout(()=>s.remove(), 1300);
     }
   }
-  // --- Slideshow logic ---
+  // --- Slideshow logic (manual slides; no auto-cycle) ---
   let __slideIndex = 0;
-  let __slideshowInterval = null;
 
   function showSlide(i){
     const container = document.getElementById('slideshow');
@@ -431,14 +442,11 @@
       const btn = document.createElement('button');
       btn.addEventListener('click', ()=>{
         showSlide(idx);
-        // reset interval
-        if (__slideshowInterval) { clearInterval(__slideshowInterval); __slideshowInterval = setInterval(nextSlide, 3000); }
+        // no auto interval; manual control
       });
       dotsWrap.appendChild(btn);
     });
     showSlide(0);
-    if (__slideshowInterval) clearInterval(__slideshowInterval);
-    __slideshowInterval = setInterval(nextSlide, 3000);
   }
 
   // initialize UI
