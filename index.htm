@@ -163,6 +163,31 @@
       height: 32px;
       accent-color: var(--pink);
     }
+    /* Slideshow styles */
+    .slideshow{
+      position: relative;
+      width: calc(100% - 2*var(--pad));
+      width: 100%;
+      height: 220px;
+      margin: 0 auto 14px;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    }
+    .slideshow img.slide{
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; display:block;
+      opacity: 0; transition: opacity 0.8s ease;
+    }
+    .slideshow img.slide.active{ opacity: 1; }
+    .dots{ display:flex; gap:8px; justify-content:center; padding:10px 0; }
+    .dots button{ width:8px; height:8px; border-radius:50%; border:0; background: rgba(0,0,0,0.12); }
+    .dots button.active{ background: var(--pink); }
+    @media (max-width:420px){
+      .slideshow{ height: 160px; }
+      .snoopy-deco{ width:110px; height:110px; }
+    }
   </style>
 </head>
 <body>
@@ -182,6 +207,16 @@
         Your browser does not support the audio element.
       </audio>
     </div>
+    <div class="content" id="content">
+      <div class="slideshow" id="slideshow">
+        <img src="IMG_3542.JPG" class="slide active" alt="">
+        <img src="IMG_3555.JPG" class="slide" alt="">
+        <img src="IMG_3756.jpg" class="slide" alt="">
+        <img src="IMG_3505.jpg" class="slide" alt="">
+        <img src="IMG_3480.JPG" class="slide" alt="">
+        <div class="dots" id="slideshow-dots"></div>
+      </div>
+
       <div class="bubble" id="bubble">Loading...</div>
       <div class="hint" id="hint"></div>
     </div>
@@ -364,8 +399,52 @@
       setTimeout(()=>s.remove(), 1300);
     }
   }
+  // --- Slideshow logic ---
+  let __slideIndex = 0;
+  let __slideshowInterval = null;
 
+  function showSlide(i){
+    const container = document.getElementById('slideshow');
+    if (!container) return;
+    const slides = Array.from(container.querySelectorAll('img.slide'));
+    const dots = document.getElementById('slideshow-dots');
+    if (slides.length === 0) return;
+    __slideIndex = (i + slides.length) % slides.length;
+    slides.forEach((s, idx) => s.classList.toggle('active', idx === __slideIndex));
+    if (dots){
+      Array.from(dots.children).forEach((d, idx)=> d.classList.toggle('active', idx === __slideIndex));
+    }
+  }
+
+  function nextSlide(){
+    showSlide(__slideIndex + 1);
+  }
+
+  function initSlideshow(){
+    const container = document.getElementById('slideshow');
+    if (!container) return;
+    const slides = Array.from(container.querySelectorAll('img.slide'));
+    const dotsWrap = document.getElementById('slideshow-dots');
+    if (!dotsWrap) return;
+    dotsWrap.innerHTML = '';
+    slides.forEach((_, idx) => {
+      const btn = document.createElement('button');
+      btn.addEventListener('click', ()=>{
+        showSlide(idx);
+        // reset interval
+        if (__slideshowInterval) { clearInterval(__slideshowInterval); __slideshowInterval = setInterval(nextSlide, 3000); }
+      });
+      dotsWrap.appendChild(btn);
+    });
+    showSlide(0);
+    if (__slideshowInterval) clearInterval(__slideshowInterval);
+    __slideshowInterval = setInterval(nextSlide, 3000);
+  }
+
+  // initialize UI
   render();
+  // wait a tick to ensure DOM is parsed then init slideshow
+  setTimeout(initSlideshow, 50);
 </script>
 </body>
 </html>
